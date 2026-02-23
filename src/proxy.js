@@ -8,14 +8,18 @@ const privateRoutes = [
     "/private",
     "/dashbaord",
     "/secret"
-]
+];
+
+
+const adminRoutes = ["/dashboard"];
 export async function proxy(req) {
     const token = await getToken({req});
     const reqPath = req.nextUrl.pathname;
     const isAuthenticated = Boolean(token)
     const isUser = token?.role === "user";
     const isAdmin = token?.role === "admin"
-    const isPrivate = privateRoutes.some(route => reqPath.startsWith(route))
+    const isPrivate = privateRoutes.some(route => reqPath.startsWith(route));
+    const isAdminRoute = adminRoutes.some(route => reqPath.startsWith(route))
     console.log({isAuthenticated, isUser, reqPath, isPrivate})
 
 
@@ -23,6 +27,10 @@ export async function proxy(req) {
         const loginUrl = new URL("/api/auth/signin", req.url)
         loginUrl.searchParams.set("callbackUrl", reqPath)
         return NextResponse.redirect(loginUrl)
+    }
+
+    if(isAuthenticated && !isAdmin && isAdminRoute){
+        return NextResponse.rewrite(new URL("/forbidden", req.url))
     }
 
     // return NextResponse.redirect(new URL('/home', request.url))
