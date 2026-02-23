@@ -5,9 +5,9 @@ import CredentialsProvider from "next-auth/providers/credentials"
 
 
 const userList = [
-  {name: "hablu", password: "1234"},
-  {name: "dablu", password: "5678"},
-  {name: "bablu", password: "9101"},
+  { name: "hablu", password: "1234"},
+  { name: "dablu", password: "5678"},
+  { name: "bablu", password: "9101"},
 ]
 
 
